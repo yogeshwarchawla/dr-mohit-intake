@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Intake Form — Dr. Mohit Chawla</title>
+<style>
+  :root {
+    --teal: #0D6E6E;
+    --teal-light: #e8f4f4;
+    --gold: #C9932A;
+    --gold-light: #fdf6e3;
+    --gray: #F5F5F5;
+    --border: #d0d0d0;
+    --text: #1a1a1a;
+    --muted: #666;
+    --wa-green: #25D366;
+    --wa-dark: #128C7E;
+    --error: #d32f2f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f4f4;
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--teal);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header-doc {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 6px;
+  }
+  .header-name {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+  }
+  .header-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+  }
+  .header-badge {
+    display: inline-block;
+    margin-top: 14px;
+    background: var(--gold);
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* INTRO BOX */
+  .intro-box {
+    background: var(--gold-light);
+    border-left: 4px solid var(--gold);
+    margin: 16px 16px 0;
+    padding: 14px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    color: #5a4010;
+    line-height: 1.6;
+  }
+  .intro-box strong { display: block; margin-bottom: 4px; color: #3d2a00; }
+
+  /* FORM CONTAINER */
+  .container { max-width: 680px; margin: 0 auto; padding: 16px 16px 100px; }
+
+  /* SECTION */
+  .section {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .section-header {
+    background: var(--teal);
+    color: white;
+    padding: 14px 18px;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .section-title-pa {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 2px;
+  }
+  .section-body { padding: 18px; }
+
+  /* FIELDS */
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  label .pa {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  label .required { color: var(--error); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="date"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--text);
+    background: white;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(13,110,110,0.1);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 480px) {
+    .field-row { grid-template-columns: 1fr; }
+  }
+
+  /* RADIO / YES-NO */
+  .yn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .yn-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    color: var(--muted);
+    user-select: none;
+  }
+  .yn-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .yn-btn.selected-yes {
+    background: #e8f4f4;
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+  .yn-btn.selected-no {
+    background: #f5f5f5;
+    border-color: #888;
+    color: #333;
+  }
+
+  /* CHECKBOX GROUP */
+  .check-group { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: white;
+  }
+  .check-item:hover { border-color: var(--teal); background: var(--teal-light); }
+  .check-item input[type="checkbox"] {
+    width: 18px; height: 18px;
+    margin-top: 1px;
+    cursor: pointer;
+    accent-color: var(--teal);
+    flex-shrink: 0;
+  }
+  .check-item.checked {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .check-label { font-size: 14px; line-height: 1.4; }
+  .check-label .pa { font-size: 12px; color: var(--muted); display: block; }
+
+  /* RADIO SELECT */
+  .radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: white;
+  }
+  .radio-item:hover { border-color: var(--teal); }
+  .radio-item input[type="radio"] {
+    width: 18px; height: 18px;
+    cursor: pointer;
+    accent-color: var(--teal);
+    flex-shrink: 0;
+  }
+  .radio-item.checked {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  /* MEDS TABLE */
+  .meds-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+  .meds-table th {
+    background: var(--teal);
+    color: white;
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .meds-table td { padding: 6px 6px; border-bottom: 1px solid var(--border); }
+  .meds-table input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 13px;
+  }
+  .meds-table tr:nth-child(even) td { background: #fafafa; }
+  .add-med-btn {
+    margin-top: 8px;
+    background: none;
+    border: 1.5px dashed var(--teal);
+    color: var(--teal);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+  }
+  .add-med-btn:hover { background: var(--teal-light); }
+
+  /* NUMBER INPUT */
+  .number-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .number-inline input[type="number"] {
+    width: 80px;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+  }
+  .number-inline span { font-size: 14px; color: var(--muted); }
+
+  /* SUBMIT */
+  .submit-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    z-index: 100;
+  }
+  .submit-btn {
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--wa-green);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--wa-dark); }
+  .submit-btn svg { flex-shrink: 0; }
+
+  /* ERROR */
+  .error-msg {
+    color: var(--error);
+    font-size: 12px;
+    margin-top: 4px;
+    display: none;
+  }
+  .field.has-error input,
+  .field.has-error textarea,
+  .field.has-error select {
+    border-color: var(--error);
+  }
+
+  /* VALIDATION BANNER */
+  .validation-banner {
+    display: none;
+    background: #ffebee;
+    border: 1.5px solid var(--error);
+    color: var(--error);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  .helper-text {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Inline falls count */
+  .falls-inline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .falls-count-wrap {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .falls-count-wrap.visible { display: flex; }
+  .falls-count-wrap input {
+    width: 70px;
+    padding: 8px;
+    text-align: center;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-doc">Consulting Physician</div>
+  <div class="header-name">Dr. Mohit Chawla</div>
+  <div class="header-sub">Senior Health & Home Visit Specialist</div>
+  <div class="header-badge">🏠 Home Visit Intake Form</div>
+</div>
+
+<div class="container">
+
+  <div class="intro-box">
+    <strong>📋 How to submit / ਕਿਵੇਂ ਭੇਜਣਾ ਹੈ:</strong>
+    Fill in all fields below and tap <strong>"Send via WhatsApp"</strong> at the bottom. Your responses will be sent directly to Dr. Mohit Chawla for review.<br>
+    <span style="font-size:13px;">ਹੇਠਾਂ ਸਾਰੇ ਖਾਲੀ ਥਾਂ ਭਰੋ ਅਤੇ ਹੇਠਾਂ "Send via WhatsApp" ਦਬਾਓ।</span>
+  </div>
+
+  <br>
+  <div class="validation-banner" id="validationBanner">
+    ⚠️ Please fill in all required fields before submitting.
+  </div>
+
+  <!-- SECTION 0: ADMIN -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Patient & Contact Information</div>
+      <div class="section-title-pa">ਮਰੀਜ਼ ਦੀ ਜਾਣਕਾਰੀ</div>
+    </div>
+    <div class="section-body">
+      <div class="field-row">
+        <div class="field" id="f-patient-name">
+          <label>Patient Full Name <span class="required">*</span><span class="pa">ਮਰੀਜ਼ ਦਾ ਪੂਰਾ ਨਾਮ</span></label>
+          <input type="text" id="patient-name" placeholder="Full name">
+          <div class="error-msg">Required / ਜ਼ਰੂਰੀ ਹੈ</div>
+        </div>
+        <div class="field" id="f-dob">
+          <label>Date of Birth <span class="required">*</span><span class="pa">ਜਨਮ ਮਿਤੀ</span></label>
+          <input type="date" id="dob">
+          <div class="error-msg">Required / ਜ਼ਰੂਰੀ ਹੈ</div>
+        </div>
+      </div>
+
+      <div class="field" id="f-address">
+        <label>Home Address <span class="required">*</span><span class="pa">ਘਰ ਦਾ ਪਤਾ</span></label>
+        <textarea id="address" rows="2" placeholder="Full address for home visit"></textarea>
+        <div class="error-msg">Required / ਜ਼ਰੂਰੀ ਹੈ</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Completed By<span class="pa">ਫਾਰਮ ਭਰਿਆ</span></label>
+          <div class="radio-group" id="completed-by">
+            <label class="radio-item" onclick="selectRadio(this,'completed-by')">
+              <input type="radio" name="completed-by" value="Patient"> Patient / ਮਰੀਜ਼
+            </label>
+            <label class="radio-item" onclick="selectRadio(this,'completed-by')">
+              <input type="radio" name="completed-by" value="Family/Caregiver"> Family / Caregiver
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label>Caregiver Name<span class="pa">ਸੇਵਾਦਾਰ ਦਾ ਨਾਮ</span></label>
+          <input type="text" id="caregiver-name" placeholder="If applicable">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field" id="f-contact">
+          <label>Contact Number <span class="required">*</span><span class="pa">ਫ਼ੋਨ ਨੰਬਰ</span></label>
+          <input type="tel" id="contact" placeholder="+91 XXXXX XXXXX">
+          <div class="error-msg">Required / ਜ਼ਰੂਰੀ ਹੈ</div>
+        </div>
+        <div class="field">
+          <label>Referring Doctor<span class="pa">ਰੈਫਰ ਕਰਨ ਵਾਲੇ ਡਾਕਟਰ</span></label>
+          <input type="text" id="ref-doctor" placeholder="If any">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Preferred Appointment Time<span class="pa">ਪਸੰਦੀਦਾ ਸਮਾਂ</span></label>
+        <input type="text" id="pref-appt" placeholder="e.g. Morning, after 10am, weekends">
+      </div>
+
+      <div class="field" id="f-primary-concern">
+        <label>Primary Concern / Reason for Visit <span class="required">*</span><span class="pa">ਮੁੱਖ ਸਮੱਸਿਆ</span></label>
+        <textarea id="primary-concern" rows="2" placeholder="Main health concern or symptoms"></textarea>
+        <div class="error-msg">Required / ਜ਼ਰੂਰੀ ਹੈ</div>
+      </div>
+
+      <div class="field">
+        <label>Primary Goal to Accomplish<span class="pa">ਮੁੱਖ ਟੀਚਾ</span></label>
+        <textarea id="primary-goal" rows="2" placeholder="What do you hope to achieve from this visit?"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: VITALITY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Section 1 — Vitality, Nutrition & Medications</div>
+      <div class="section-title-pa">ਭਾਗ 1 — ਸਿਹਤ, ਖੁਰਾਕ ਅਤੇ ਦਵਾਈਆਂ</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label>Q1. Do you take 5 or more daily medications (including vitamins/OTC)?<span class="pa">ਕੀ ਤੁਸੀਂ ਰੋਜ਼ਾਨਾ 5 ਜਾਂ ਵੱਧ ਦਵਾਈਆਂ ਲੈਂਦੇ ਹੋ?</span></label>
+        <div class="yn-group" id="q1">
+          <div class="yn-btn" onclick="selectYN(this,'q1','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q1','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q2. Do you ever skip doses due to side effects, confusion, schedule, or cost?<span class="pa">ਕੀ ਤੁਸੀਂ ਕਦੇ ਦਵਾਈ ਖੁੰਝਾ ਦਿੰਦੇ ਹੋ?</span></label>
+        <div class="yn-group" id="q2">
+          <div class="yn-btn" onclick="selectYN(this,'q2','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q2','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q3. Have you had unexpected weight loss in the past 6 months?<span class="pa">ਕੀ ਪਿਛਲੇ 6 ਮਹੀਨਿਆਂ ਵਿੱਚ ਭਾਰ ਘਟਿਆ?</span></label>
+        <div class="yn-group" id="q3">
+          <div class="yn-btn" onclick="selectYN(this,'q3','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q3','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q4. Do you eat high-protein foods (meat, fish, eggs, dairy, lentils) at most meals?<span class="pa">ਕੀ ਤੁਸੀਂ ਪ੍ਰੋਟੀਨ ਵਾਲੀ ਖੁਰਾਕ ਖਾਂਦੇ ਹੋ?</span></label>
+        <div class="yn-group" id="q4">
+          <div class="yn-btn" onclick="selectYN(this,'q4','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q4','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q5. Do you have vision or hearing difficulties affecting daily life?<span class="pa">ਕੀ ਨਜ਼ਰ ਜਾਂ ਸੁਣਨ ਵਿੱਚ ਮੁਸ਼ਕਲ ਹੈ?</span></label>
+        <div class="yn-group" id="q5">
+          <div class="yn-btn" onclick="selectYN(this,'q5','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q5','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="field">
+        <label>Current Medications List<span class="pa">ਮੌਜੂਦਾ ਦਵਾਈਆਂ ਦੀ ਸੂਚੀ</span></label>
+        <p class="helper-text">List all medications. Leave blank if none.</p>
+        <table class="meds-table" id="meds-table">
+          <thead>
+            <tr>
+              <th style="width:35%">Generic Name</th>
+              <th style="width:35%">Dosage / Frequency</th>
+              <th style="width:30%">Reason</th>
+            </tr>
+          </thead>
+          <tbody id="meds-body">
+            <tr>
+              <td><input type="text" placeholder="e.g. Metformin"></td>
+              <td><input type="text" placeholder="e.g. 500mg twice"></td>
+              <td><input type="text" placeholder="e.g. Diabetes"></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="Medicine name"></td>
+              <td><input type="text" placeholder="Dosage"></td>
+              <td><input type="text" placeholder="Reason"></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="Medicine name"></td>
+              <td><input type="text" placeholder="Dosage"></td>
+              <td><input type="text" placeholder="Reason"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="add-med-btn" onclick="addMedRow()">+ Add another medication / ਹੋਰ ਦਵਾਈ ਜੋੜੋ</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 2: COGNITION -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Section 2 — Cognition, Sleep & Mood</div>
+      <div class="section-title-pa">ਭਾਗ 2 — ਯਾਦਦਾਸ਼ਤ, ਨੀਂਦ ਅਤੇ ਮਨੋਦਸ਼ਾ</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label>Q6. Have you or family noticed unusual changes in memory or daily thinking?<span class="pa">ਕੀ ਯਾਦਦਾਸ਼ਤ ਵਿੱਚ ਬਦਲਾਅ ਆਇਆ ਹੈ?</span></label>
+        <div class="yn-group" id="q6">
+          <div class="yn-btn" onclick="selectYN(this,'q6','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q6','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q7. Do memory changes interfere with managing day-to-day tasks independently?<span class="pa">ਕੀ ਇਹ ਬਦਲਾਅ ਰੋਜ਼ਮਰ੍ਹਾ ਦੇ ਕੰਮਾਂ ਨੂੰ ਪ੍ਰਭਾਵਿਤ ਕਰਦਾ ਹੈ?</span></label>
+        <div class="yn-group" id="q7">
+          <div class="yn-btn" onclick="selectYN(this,'q7','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q7','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q8. How many times do you typically wake up during the night?<span class="pa">ਰਾਤ ਵਿੱਚ ਕਿੰਨੀ ਵਾਰ ਜਾਗਦੇ ਹੋ?</span></label>
+        <div class="number-inline">
+          <input type="number" id="q8" min="0" max="20" placeholder="0" style="width:80px">
+          <span>times per night / ਵਾਰ ਪ੍ਰਤੀ ਰਾਤ</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q9. Do you wake up feeling refreshed and fully restored?<span class="pa">ਕੀ ਸਵੇਰੇ ਉੱਠ ਕੇ ਤਾਜ਼ਾ ਮਹਿਸੂਸ ਹੁੰਦਾ ਹੈ?</span></label>
+        <div class="yn-group" id="q9">
+          <div class="yn-btn" onclick="selectYN(this,'q9','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q9','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q10. In the past 2 weeks, have you frequently felt down, depressed, or hopeless?<span class="pa">ਕੀ ਪਿਛਲੇ 2 ਹਫ਼ਤਿਆਂ ਵਿੱਚ ਉਦਾਸ ਮਹਿਸੂਸ ਕੀਤਾ?</span></label>
+        <div class="yn-group" id="q10">
+          <div class="yn-btn" onclick="selectYN(this,'q10','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q10','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q11. In the past 2 weeks, have you lost interest or pleasure in usual activities?<span class="pa">ਕੀ ਰੋਜ਼ਾਨਾ ਦੀਆਂ ਗਤੀਵਿਧੀਆਂ ਵਿੱਚ ਦਿਲਚਸਪੀ ਘਟੀ ਹੈ?</span></label>
+        <div class="yn-group" id="q11">
+          <div class="yn-btn" onclick="selectYN(this,'q11','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q11','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 3: MOBILITY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Section 3 — Mobility, Safety & Daily Routine</div>
+      <div class="section-title-pa">ਭਾਗ 3 — ਚੱਲਣਾ-ਫਿਰਨਾ, ਸੁਰੱਖਿਆ ਅਤੇ ਰੋਜ਼ਾਨਾ ਕੰਮ</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label>Q12. Have you had any accidental falls in the past 12 months?<span class="pa">ਕੀ ਪਿਛਲੇ 12 ਮਹੀਨਿਆਂ ਵਿੱਚ ਡਿੱਗੇ ਹੋ?</span></label>
+        <div class="falls-inline">
+          <div class="yn-group" id="q12" style="flex:none">
+            <div class="yn-btn" onclick="selectYN(this,'q12','Yes'); document.getElementById('falls-count-wrap').classList.add('visible')">✅ Yes / ਹਾਂ</div>
+            <div class="yn-btn" onclick="selectYN(this,'q12','No'); document.getElementById('falls-count-wrap').classList.remove('visible')">❌ No / ਨਹੀਂ</div>
+          </div>
+          <div class="falls-count-wrap" id="falls-count-wrap">
+            <input type="number" id="q12-count" min="1" max="50" placeholder="0" style="width:70px; padding:8px; text-align:center; font-weight:700; border:1.5px solid #d0d0d0; border-radius:8px;">
+            <span style="font-size:13px; color:#666">times / ਵਾਰ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q13. Do you feel unsteady when walking, standing up, or turning around?<span class="pa">ਕੀ ਚੱਲਦੇ ਜਾਂ ਉੱਠਦੇ ਸਮੇਂ ਅਸਥਿਰਤਾ ਮਹਿਸੂਸ ਹੁੰਦੀ ਹੈ?</span></label>
+        <div class="yn-group" id="q13">
+          <div class="yn-btn" onclick="selectYN(this,'q13','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q13','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q14. Do you rely on a cane, walker, or furniture to move around?<span class="pa">ਕੀ ਤੁਸੀਂ ਛੜੀ, ਵਾਕਰ ਜਾਂ ਫ਼ਰਨੀਚਰ ਦਾ ਸਹਾਰਾ ਲੈਂਦੇ ਹੋ?</span></label>
+        <div class="yn-group" id="q14">
+          <div class="yn-btn" onclick="selectYN(this,'q14','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q14','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q15. Do you need physical help or supervision for any of the following?<span class="pa">ਕੀ ਤੁਹਾਨੂੰ ਹੇਠਾਂ ਦਿੱਤੇ ਕੰਮਾਂ ਲਈ ਮਦਦ ਚਾਹੀਦੀ ਹੈ?</span></label>
+        <div class="check-group" id="q15">
+          <label class="check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" value="Bathing/Showering/Transferring">
+            <div class="check-label">Bathing, showering, or transferring<span class="pa">ਨਹਾਉਣਾ / ਉੱਠਣਾ-ਬੈਠਣਾ</span></div>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" value="Dressing/Grooming/Footwear">
+            <div class="check-label">Dressing, grooming, or footwear<span class="pa">ਕੱਪੜੇ ਪਾਉਣਾ / ਤਿਆਰ ਹੋਣਾ</span></div>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" value="Using Restroom">
+            <div class="check-label">Using the restroom independently<span class="pa">ਟਾਇਲਟ ਦੀ ਵਰਤੋਂ</span></div>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" value="Preparing Hot Meals">
+            <div class="check-label">Preparing hot meals or cooking<span class="pa">ਖਾਣਾ ਬਣਾਉਣਾ</span></div>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" value="Managing Finances/Banking">
+            <div class="check-label">Managing finances, banking, or bills<span class="pa">ਪੈਸੇ / ਬੈਂਕਿੰਗ ਦਾ ਪ੍ਰਬੰਧ</span></div>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" value="Tracking/Taking Medications">
+            <div class="check-label">Tracking & taking medications correctly<span class="pa">ਦਵਾਈਆਂ ਸਹੀ ਸਮੇਂ ਲੈਣਾ</span></div>
+          </label>
+          <label class="check-item" onclick="toggleCheck(this)">
+            <input type="checkbox" value="Driving/Transportation">
+            <div class="check-label">Driving or arranging transportation<span class="pa">ਗੱਡੀ / ਆਵਾਜਾਈ</span></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q16. Are there loose rugs, cords, cluttered paths, or dim lighting in your home?<span class="pa">ਕੀ ਘਰ ਵਿੱਚ ਖ਼ਤਰਨਾਕ ਚੀਜ਼ਾਂ ਹਨ?</span></label>
+        <div class="yn-group" id="q16">
+          <div class="yn-btn" onclick="selectYN(this,'q16','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q16','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q17. Does your bathroom lack grab bars or non-slip mats in tub/shower?<span class="pa">ਕੀ ਬਾਥਰੂਮ ਵਿੱਚ ਗ੍ਰੈਬ ਬਾਰ ਜਾਂ ਨਾਨ-ਸਲਿੱਪ ਮੈਟ ਨਹੀਂ ਹਨ?</span></label>
+        <div class="yn-group" id="q17">
+          <div class="yn-btn" onclick="selectYN(this,'q17','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q17','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION 4: COMMUNITY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Section 4 — Community & Lifestyle</div>
+      <div class="section-title-pa">ਭਾਗ 4 — ਸਮਾਜ ਅਤੇ ਜੀਵਨ ਸ਼ੈਲੀ</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field">
+        <label>Q18. Current Living Arrangement<span class="pa">ਵਰਤਮਾਨ ਰਿਹਾਇਸ਼ੀ ਵਿਵਸਥਾ</span></label>
+        <div class="radio-group" id="q18">
+          <label class="radio-item" onclick="selectRadio(this,'q18')">
+            <input type="radio" name="q18" value="Alone"> Alone / ਇਕੱਲੇ
+          </label>
+          <label class="radio-item" onclick="selectRadio(this,'q18')">
+            <input type="radio" name="q18" value="With Spouse"> With Spouse / ਪਤੀ/ਪਤਨੀ ਨਾਲ
+          </label>
+          <label class="radio-item" onclick="selectRadio(this,'q18')">
+            <input type="radio" name="q18" value="With Children/Family"> With Children / Family / ਬੱਚਿਆਂ ਨਾਲ
+          </label>
+          <label class="radio-item" onclick="selectRadio(this,'q18')">
+            <input type="radio" name="q18" value="Assisted/Group Living"> Assisted / Group Living
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q19. Do you have someone who can immediately assist in an emergency?<span class="pa">ਕੀ ਐਮਰਜੈਂਸੀ ਵਿੱਚ ਕੋਈ ਮਦਦ ਕਰਨ ਵਾਲਾ ਹੈ?</span></label>
+        <div class="yn-group" id="q19">
+          <div class="yn-btn" onclick="selectYN(this,'q19','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q19','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q20. How often do you participate in social groups, hobbies, or community activities?<span class="pa">ਤੁਸੀਂ ਕਿੰਨੀ ਵਾਰ ਸਮਾਜਿਕ ਗਤੀਵਿਧੀਆਂ ਵਿੱਚ ਹਿੱਸਾ ਲੈਂਦੇ ਹੋ?</span></label>
+        <div class="radio-group" id="q20">
+          <label class="radio-item" onclick="selectRadio(this,'q20')">
+            <input type="radio" name="q20" value="Daily"> Daily / ਰੋਜ਼ਾਨਾ
+          </label>
+          <label class="radio-item" onclick="selectRadio(this,'q20')">
+            <input type="radio" name="q20" value="2-3 Times/Week"> 2–3 Times/Week / ਹਫ਼ਤੇ ਵਿੱਚ 2-3 ਵਾਰ
+          </label>
+          <label class="radio-item" onclick="selectRadio(this,'q20')">
+            <input type="radio" name="q20" value="Rarely (less than once a week)"> Rarely / ਬਹੁਤ ਘੱਟ
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Q21. Do you ever feel isolated, lonely, or wish for more social contact?<span class="pa">ਕੀ ਤੁਸੀਂ ਕਦੇ ਇਕੱਲਾਪਣ ਮਹਿਸੂਸ ਕਰਦੇ ਹੋ?</span></label>
+        <div class="yn-group" id="q21">
+          <div class="yn-btn" onclick="selectYN(this,'q21','Yes')">✅ Yes / ਹਾਂ</div>
+          <div class="yn-btn" onclick="selectYN(this,'q21','No')">❌ No / ਨਹੀਂ</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Additional Notes / Comments<span class="pa">ਵਾਧੂ ਟਿੱਪਣੀਆਂ</span></label>
+        <textarea id="additional-notes" rows="3" placeholder="Any additional information you'd like Dr. Mohit to know..."></textarea>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- FIXED SUBMIT BAR -->
+<div class="submit-bar">
+  <button class="submit-btn" onclick="submitForm()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.558 4.118 1.528 5.836L0 24l6.336-1.504A11.934 11.934 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.964-1.348l-.356-.211-3.762.893.938-3.672-.232-.373A9.818 9.818 0 1112 21.818z"/>
+    </svg>
+    Send via WhatsApp to Dr. Mohit
+  </button>
+</div>
+
+<script>
+  const DOCTOR_NUMBER = '916280500928';
+
+  // Store selections
+  const ynValues = {};
+  const radioValues = {};
+
+  function selectYN(el, groupId, value) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.yn-btn').forEach(b => {
+      b.classList.remove('selected-yes', 'selected-no');
+    });
+    if (value === 'Yes') el.classList.add('selected-yes');
+    else el.classList.add('selected-no');
+    ynValues[groupId] = value;
+  }
+
+  function selectRadio(el, groupId) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.radio-item').forEach(r => r.classList.remove('checked'));
+    el.classList.add('checked');
+    el.querySelector('input[type="radio"]').checked = true;
+    radioValues[groupId] = el.querySelector('input[type="radio"]').value;
+  }
+
+  function toggleCheck(el) {
+    const cb = el.querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    if (cb.checked) el.classList.add('checked');
+    else el.classList.remove('checked');
+  }
+
+  function addMedRow() {
+    const tbody = document.getElementById('meds-body');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" placeholder="Medicine name"></td>
+      <td><input type="text" placeholder="Dosage"></td>
+      <td><input type="text" placeholder="Reason"></td>
+    `;
+    tbody.appendChild(tr);
+  }
+
+  function getMeds() {
+    const rows = document.querySelectorAll('#meds-body tr');
+    const meds = [];
+    rows.forEach((row, i) => {
+      const inputs = row.querySelectorAll('input');
+      const name = inputs[0].value.trim();
+      const dosage = inputs[1].value.trim();
+      const reason = inputs[2].value.trim();
+      if (name || dosage || reason) {
+        meds.push(`  ${i+1}. ${name || '—'} | ${dosage || '—'} | ${reason || '—'}`);
+      }
+    });
+    return meds.length ? meds.join('\n') : '  None listed';
+  }
+
+  function getChecked(groupId) {
+    const group = document.getElementById(groupId);
+    const checked = [];
+    group.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+      checked.push(cb.value);
+    });
+    return checked.length ? checked.join(', ') : 'None';
+  }
+
+  function validate() {
+    let valid = true;
+    const required = [
+      { id: 'f-patient-name', fieldId: 'patient-name' },
+      { id: 'f-dob', fieldId: 'dob' },
+      { id: 'f-address', fieldId: 'address' },
+      { id: 'f-contact', fieldId: 'contact' },
+      { id: 'f-primary-concern', fieldId: 'primary-concern' },
+    ];
+    required.forEach(r => {
+      const field = document.getElementById(r.id);
+      const input = document.getElementById(r.fieldId);
+      const errMsg = field.querySelector('.error-msg');
+      if (!input.value.trim()) {
+        field.classList.add('has-error');
+        if (errMsg) errMsg.style.display = 'block';
+        valid = false;
+      } else {
+        field.classList.remove('has-error');
+        if (errMsg) errMsg.style.display = 'none';
+      }
+    });
+    return valid;
+  }
+
+  function yn(groupId) {
+    return ynValues[groupId] || 'Not answered';
+  }
+
+  function submitForm() {
+    if (!validate()) {
+      const banner = document.getElementById('validationBanner');
+      banner.style.display = 'block';
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    document.getElementById('validationBanner').style.display = 'none';
+
+    const dob = document.getElementById('dob').value;
+    const dobFormatted = dob ? new Date(dob).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'}) : '—';
+
+    const msg = [
+      '🏥 *NEW PATIENT INTAKE FORM*',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '',
+      '👤 *PATIENT DETAILS*',
+      `Name: ${document.getElementById('patient-name').value.trim()}`,
+      `DOB: ${dobFormatted}`,
+      `Address: ${document.getElementById('address').value.trim()}`,
+      `Contact: ${document.getElementById('contact').value.trim()}`,
+      `Completed By: ${radioValues['completed-by'] || '—'}${document.getElementById('caregiver-name').value.trim() ? ' — ' + document.getElementById('caregiver-name').value.trim() : ''}`,
+      `Referring Doctor: ${document.getElementById('ref-doctor').value.trim() || '—'}`,
+      `Preferred Appt: ${document.getElementById('pref-appt').value.trim() || '—'}`,
+      `Primary Concern: ${document.getElementById('primary-concern').value.trim()}`,
+      `Goal: ${document.getElementById('primary-goal').value.trim() || '—'}`,
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '💊 *SECTION 1: VITALITY & NUTRITION*',
+      `Q1. 5+ daily medications: ${yn('q1')}`,
+      `Q2. Skips doses: ${yn('q2')}`,
+      `Q3. Unexpected weight loss: ${yn('q3')}`,
+      `Q4. Eats high-protein: ${yn('q4')}`,
+      `Q5. Vision/hearing difficulty: ${yn('q5')}`,
+      '',
+      '📋 *Current Medications:*',
+      getMeds(),
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '🧠 *SECTION 2: COGNITION, SLEEP & MOOD*',
+      `Q6. Memory changes noticed: ${yn('q6')}`,
+      `Q7. Memory affects daily tasks: ${yn('q7')}`,
+      `Q8. Night wakings: ${document.getElementById('q8').value || '—'} times/night`,
+      `Q9. Wakes refreshed: ${yn('q9')}`,
+      `Q10. Feels down/depressed: ${yn('q10')}`,
+      `Q11. Lost interest in activities: ${yn('q11')}`,
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '🚶 *SECTION 3: MOBILITY & SAFETY*',
+      `Q12. Falls in past 12 months: ${yn('q12')}${ynValues['q12']==='Yes' && document.getElementById('q12-count').value ? ' (' + document.getElementById('q12-count').value + ' times)' : ''}`,
+      `Q13. Feels unsteady: ${yn('q13')}`,
+      `Q14. Uses cane/walker: ${yn('q14')}`,
+      `Q15. Needs help with: ${getChecked('q15')}`,
+      `Q16. Home hazards present: ${yn('q16')}`,
+      `Q17. No grab bars in bathroom: ${yn('q17')}`,
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '🏡 *SECTION 4: COMMUNITY & LIFESTYLE*',
+      `Q18. Living arrangement: ${radioValues['q18'] || '—'}`,
+      `Q19. Emergency support available: ${yn('q19')}`,
+      `Q20. Social participation: ${radioValues['q20'] || '—'}`,
+      `Q21. Feels isolated/lonely: ${yn('q21')}`,
+      '',
+      document.getElementById('additional-notes').value.trim()
+        ? '📝 *Additional Notes:*\n' + document.getElementById('additional-notes').value.trim()
+        : '',
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      '✅ Form submitted via Patient Intake Portal',
+    ].filter(l => l !== undefined).join('\n');
+
+    const encoded = encodeURIComponent(msg);
+    window.open(`https://wa.me/${DOCTOR_NUMBER}?text=${encoded}`, '_blank');
+  }
+</script>
+</body>
+</html>
