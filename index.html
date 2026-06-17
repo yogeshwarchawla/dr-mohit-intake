@@ -59,9 +59,15 @@
     letter-spacing: 0.3px;
     margin-bottom: 4px;
   }
+  .header-name .md {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gold);
+  }
   .header-sub {
     font-size: 14px;
-    color: rgba(255,255,255,0.75);
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
   }
   .header-badge {
     display: inline-block;
@@ -73,6 +79,27 @@
     padding: 5px 14px;
     border-radius: 20px;
     letter-spacing: 0.5px;
+  }
+  .header-trained {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .header-trained::before,
+  .header-trained::after {
+    content: '';
+    height: 1px;
+    width: 36px;
+    background: rgba(201,147,42,0.6);
+  }
+  .header-trained span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--gold);
+    text-transform: uppercase;
   }
 
   /* INTRO BOX */
@@ -191,36 +218,42 @@
   }
   .yn-btn:hover { border-color: var(--teal); color: var(--teal); }
   .yn-btn.selected-yes {
-    background: #e8f4f4;
+    background: var(--teal);
     border-color: var(--teal);
-    color: var(--teal);
+    color: white;
+    box-shadow: 0 2px 6px rgba(13,110,110,0.3);
   }
   .yn-btn.selected-no {
-    background: #f5f5f5;
-    border-color: #888;
-    color: #333;
+    background: #555;
+    border-color: #555;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   }
 
   /* CHECKBOX GROUP */
   .check-group { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
   .check-item {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 12px;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px;
     border: 1.5px solid var(--border);
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.15s;
     background: white;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 48px;
   }
   .check-item:hover { border-color: var(--teal); background: var(--teal-light); }
   .check-item input[type="checkbox"] {
-    width: 18px; height: 18px;
-    margin-top: 1px;
+    width: 24px; height: 24px;
+    margin: 0;
     cursor: pointer;
     accent-color: var(--teal);
     flex-shrink: 0;
+    pointer-events: none;
   }
   .check-item.checked {
     border-color: var(--teal);
@@ -398,8 +431,9 @@
 
 <div class="header">
   <div class="header-doc">Consulting Physician</div>
-  <div class="header-name">Dr. Mohit Chawla</div>
-  <div class="header-sub">Senior Health & Home Visit Specialist</div>
+  <div class="header-name">Dr. Mohit Chawla, <span class="md">M.D.</span></div>
+  <div class="header-sub">Consultant Geriatrician &amp; Palliative Care Specialist</div>
+  <div class="header-trained"><span>USA Trained</span></div>
   <div class="header-badge">🏠 Home Visit Intake Form</div>
 </div>
 
